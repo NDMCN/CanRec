@@ -7,13 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: unzip -o .github/workflows/CanRecV2.1.zip
+      - run: unzip -o ".github/workflows/*.zip"
       - uses: actions/setup-java@v4
         with: {distribution: temurin, java-version: 17}
       - uses: gradle/actions/setup-gradle@v4
         with: {gradle-version: 8.7}
       - run: cd CanRec && gradle assembleDebug --no-daemon
+      - run: mv CanRec/app/build/outputs/apk/debug/app-debug.apk CanRec-build-${{ github.run_number }}.apk
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
-          files: CanRec/app/build/outputs/apk/debug/app-debug.apk
+          files: CanRec-build-${{ github.run_number }}.apk
